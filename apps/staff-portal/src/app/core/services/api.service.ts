@@ -101,4 +101,53 @@ export class ApiService {
     if (districtId) params = params.set('districtId', districtId.toString());
     return this.http.get<UpazilaDto[]>(`${this.baseUrl}/geo/upazilas`, { params });
   }
+
+  // Appointments & OPD Queue
+  getDoctors(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/appointments/doctors`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  getAvailableSlots(doctorId: string, date: string): Observable<any[]> {
+    const params = new HttpParams()
+      .set('doctorId', doctorId)
+      .set('date', date);
+    return this.http.get<any[]>(`${this.baseUrl}/appointments/slots`, {
+      params,
+      headers: this.getHeaders()
+    });
+  }
+
+  bookAppointment(request: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/appointments`, request, {
+      headers: this.getHeaders()
+    });
+  }
+
+  checkInAppointment(appointmentId: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/appointments/${appointmentId}/check-in`, {}, {
+      headers: this.getHeaders()
+    });
+  }
+
+  getDoctorQueue(doctorId: string, date: string): Observable<any[]> {
+    const params = new HttpParams()
+      .set('doctorId', doctorId)
+      .set('date', date);
+    return this.http.get<any[]>(`${this.baseUrl}/appointments/queue`, {
+      params,
+      headers: this.getHeaders()
+    });
+  }
+
+  getAppointments(date?: string, doctorId?: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (date) params = params.set('date', date);
+    if (doctorId) params = params.set('doctorId', doctorId);
+    return this.http.get<any[]>(`${this.baseUrl}/appointments`, {
+      params,
+      headers: this.getHeaders()
+    });
+  }
 }

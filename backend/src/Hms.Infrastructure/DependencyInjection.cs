@@ -65,6 +65,7 @@ public static class DependencyInjection
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<IMrnGenerator, MrnGenerator>();
         services.AddScoped<IPatientService, PatientService>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
 
         // ─── Policy-based Authorization ───
         services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();

@@ -63,6 +63,7 @@ try
 
     // ─── Controllers & Problem Details ───
     builder.Services.AddControllers();
+    builder.Services.AddSignalR();
     builder.Services.AddProblemDetails(options =>
     {
         options.CustomizeProblemDetails = ctx =>
@@ -109,14 +110,22 @@ try
 
             Log.Error(exception, "Unhandled exception on {Path}", context.Request.Path);
 
-            var statusCode = exception is Hms.Domain.Exceptions.DomainException
-                ? StatusCodes.Status400BadRequest
-                : StatusCodes.Status500InternalServerError;
+            var statusCode = exception switch
+            {
+                Hms.Domain.Exceptions.ConflictException => StatusCodes.Status409Conflict,
+                Hms.Domain.Exceptions.DomainException => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
             var problemDetails = new ProblemDetails
             {
                 Status = statusCode,
-                Title = exception is Hms.Domain.Exceptions.DomainException ? "Business rule violation" : "An error occurred while processing your request.",
+                Title = exception switch
+                {
+                    Hms.Domain.Exceptions.ConflictException => "Resource conflict",
+                    Hms.Domain.Exceptions.DomainException => "Business rule violation",
+                    _ => "An error occurred while processing your request."
+                },
                 Detail = exception?.Message,
                 Instance = context.Request.Path
             };
@@ -156,6 +165,7 @@ try
     });
 
     app.MapControllers();
+    app.MapHub<Hms.Infrastructure.Hubs.OpdHub>("/hubs/opd");
 
     app.Run();
 }

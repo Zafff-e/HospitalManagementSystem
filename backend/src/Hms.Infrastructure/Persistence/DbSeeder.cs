@@ -294,5 +294,95 @@ public static class DbSeeder
 
         context.Patients.AddRange(patientsToAdd);
         await context.SaveChangesAsync();
+
+        // 6. Seed Doctors and Schedules
+        await SeedDoctorsAndSchedulesAsync(context);
+    }
+
+    private static async Task SeedDoctorsAndSchedulesAsync(HmsDbContext context)
+    {
+        if (await context.Doctors.AnyAsync()) return;
+
+        // Ensure Department exists
+        var dept = await context.Departments.FirstOrDefaultAsync();
+        if (dept == null)
+        {
+            dept = new Department
+            {
+                HospitalId = DemoHospitalId,
+                Name = "General Medicine",
+                NameBn = "জেনারেল মেডিসিন",
+                Code = "MED"
+            };
+            context.Departments.Add(dept);
+            await context.SaveChangesAsync();
+        }
+
+        var doctor1 = new Hms.Domain.Entities.Clinical.Doctor
+        {
+            Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+            HospitalId = DemoHospitalId,
+            UserId = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+            DepartmentId = dept.Id,
+            FullName = "Dr. Anisur Rahman",
+            FullNameBn = "ডাঃ আনিসুর রহমান",
+            Specialty = "Cardiology",
+            SpecialtyBn = "হৃদরোগ বিশেষজ্ঞ",
+            BmdcRegNo = "A-45892",
+            ConsultationFee = 1000m,
+            Qualification = "MBBS (DMC), FCPS (Cardiology)",
+            IsActive = true
+        };
+
+        var doctor2 = new Hms.Domain.Entities.Clinical.Doctor
+        {
+            Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+            HospitalId = DemoHospitalId,
+            UserId = Guid.Parse("55555555-5555-5555-5555-555555555555"),
+            DepartmentId = dept.Id,
+            FullName = "Dr. Farhana Chowdhury",
+            FullNameBn = "ডাঃ ফারহানা চৌধুরী",
+            Specialty = "General Medicine",
+            SpecialtyBn = "মেডিসিন বিশেষজ্ঞ",
+            BmdcRegNo = "A-56214",
+            ConsultationFee = 800m,
+            Qualification = "MBBS, MD (Medicine)",
+            IsActive = true
+        };
+
+        context.Doctors.AddRange(doctor1, doctor2);
+        await context.SaveChangesAsync();
+
+        // Seed schedules for all days of week
+        var days = new[] { DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Saturday };
+        var schedules = new List<Hms.Domain.Entities.Clinical.DoctorSchedule>();
+
+        foreach (var day in days)
+        {
+            schedules.Add(new Hms.Domain.Entities.Clinical.DoctorSchedule
+            {
+                DoctorId = doctor1.Id,
+                DayOfWeek = day,
+                StartTime = new TimeSpan(9, 0, 0),
+                EndTime = new TimeSpan(13, 0, 0),
+                SlotMinutes = 15,
+                MaxPatientsPerSlot = 1,
+                IsActive = true
+            });
+
+            schedules.Add(new Hms.Domain.Entities.Clinical.DoctorSchedule
+            {
+                DoctorId = doctor2.Id,
+                DayOfWeek = day,
+                StartTime = new TimeSpan(17, 0, 0),
+                EndTime = new TimeSpan(21, 0, 0),
+                SlotMinutes = 15,
+                MaxPatientsPerSlot = 1,
+                IsActive = true
+            });
+        }
+
+        context.DoctorSchedules.AddRange(schedules);
+        await context.SaveChangesAsync();
     }
 }

@@ -113,3 +113,37 @@
 
 ### Known gaps: None
 
+---
+
+## Phase 4 — Appointments & OPD Queue (M2)
+**Date:** 2026-10-18  
+**Status:** ✅ Complete (Tagged `phase-04-complete`)
+
+### What was done:
+- Added `Doctor`, `DoctorSchedule`, `Appointment`, and `OpdToken` domain entities and configurations.
+- Implemented `IAppointmentService` and [AppointmentService](backend/src/Hms.Infrastructure/Services/AppointmentService.cs):
+  - Doctor slot generation based on weekly schedule, appointment duration, and holiday exclusions.
+  - Concurrency slot locking using in-memory slot mutex ensuring race conditions return 409 Conflict.
+  - Asia/Dhaka daily token reset and sequential OPD token generation per doctor per day.
+  - Real-time SignalR queue broadcasts via [OpdHub](backend/src/Hms.Infrastructure/Hubs/OpdHub.cs) at `/hubs/opd`.
+- Implemented [AppointmentsController](backend/src/Hms.Api/Controllers/AppointmentsController.cs):
+  - `GET /api/v1/doctors?departmentId=`
+  - `GET /api/v1/doctors/{id}/slots?date=`
+  - `GET /api/v1/appointments`
+  - `POST /api/v1/appointments`
+  - `POST /api/v1/appointments/{id}/check-in`
+  - `GET /api/v1/opd/queue?doctorId=&date=`
+- Updated [DbSeeder](backend/src/Hms.Infrastructure/Persistence/DbSeeder.cs) with Departments, Doctors (Dr. Anisur Rahman, Dr. Farhana Chowdhury), and schedules across all working days.
+- Built Angular 22 Appointment Booking screen (`AppointmentBookingComponent`) with doctor selection, interactive date picker, time slot cards, and booking submission.
+- Built Angular 22 OPD Reception Check-in & Live Queue screen (`OpdQueueComponent`) with SignalR real-time auto-updating queue cards and check-in modal.
+- Integrated routes into Angular Router in `app.routes.ts` and verified clean production build.
+- Added comprehensive integration tests in [AppointmentsAndOpdTests.cs](backend/tests/Hms.IntegrationTests/AppointmentsAndOpdTests.cs).
+
+### Tests:
+- Checkpoint 4 Requirement 1 (Concurrent bookings for the same slot -> 1 succeeds [201 Created], 1 gets 409 Conflict): ✅ Passed
+- Checkpoint 4 Requirement 2 (Check-in assigns sequential token and updates doctor's queue via SignalR): ✅ Passed
+- Total test suite: 38 passed, 0 failed (23 Unit Tests + 15 Integration Tests).
+
+### Known gaps: None
+
+

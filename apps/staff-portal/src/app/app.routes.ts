@@ -25,11 +25,11 @@ export const routes: Routes = [
       },
       {
         path: 'appointments',
-        loadComponent: () => import('./features/patients/patient-list/patient-list.component').then(m => m.PatientListComponent)
+        loadComponent: () => import('./features/appointments/appointment-booking/appointment-booking.component').then(m => m.AppointmentBookingComponent)
       },
       {
         path: 'opd-queue',
-        loadComponent: () => import('./features/patients/patient-list/patient-list.component').then(m => m.PatientListComponent)
+        loadComponent: () => import('./features/appointments/opd-queue/opd-queue.component').then(m => m.OpdQueueComponent)
       },
       {
         path: '**',
