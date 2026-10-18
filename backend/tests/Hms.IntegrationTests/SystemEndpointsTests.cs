@@ -6,11 +6,11 @@ using Xunit;
 
 namespace Hms.IntegrationTests;
 
-public class SystemEndpointsTests : IClassFixture<WebApplicationFactory<Program>>
+public class SystemEndpointsTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly HttpClient _client;
 
-    public SystemEndpointsTests(WebApplicationFactory<Program> factory)
+    public SystemEndpointsTests(CustomWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
     }

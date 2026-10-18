@@ -1,16 +1,25 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Hms.Domain.Common;
 using Hms.Domain.Entities.Core;
 using Hms.Domain.Entities.Patient;
 using Hms.Domain.Entities.Clinical;
+using Hms.Domain.Entities.Audit;
+using Hms.Infrastructure.Identity;
 
 namespace Hms.Infrastructure.Persistence;
 
-public class HmsDbContext : DbContext
+public class HmsDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
     public HmsDbContext(DbContextOptions<HmsDbContext> options) : base(options)
     {
     }
+
+    // Identity & Permissions
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     // Core
     public DbSet<Hospital> Hospitals => Set<Hospital>();
@@ -41,7 +50,37 @@ public class HmsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Apply global soft delete filter
+        // Configure RolePermission composite key
+        modelBuilder.Entity<RolePermission>(entity =>
+        {
+            entity.HasKey(rp => new { rp.RoleId, rp.PermissionId });
+            entity.HasOne(rp => rp.Role)
+                  .WithMany(r => r.RolePermissions)
+                  .HasForeignKey(rp => rp.RoleId);
+            entity.HasOne(rp => rp.Permission)
+                  .WithMany(p => p.RolePermissions)
+                  .HasForeignKey(rp => rp.PermissionId);
+        });
+
+        // Configure RefreshToken
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.Token).IsUnique();
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.RefreshTokens)
+                  .HasForeignKey(e => e.UserId);
+        });
+
+        // Configure AuditLog
+        modelBuilder.Entity<AuditLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.Entity, e.EntityId });
+            entity.HasIndex(e => e.CreatedAt);
+        });
+
+        // Apply global soft delete filter for BaseEntity
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))

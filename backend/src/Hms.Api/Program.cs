@@ -1,8 +1,11 @@
+using System.Text;
 using Hms.Application;
 using Hms.Infrastructure;
 using Hms.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
@@ -31,6 +34,32 @@ try
     // ─── Add Layer Services ───
     builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructureServices(builder.Configuration);
+
+    // ─── JWT Authentication ───
+    var jwtSecret = builder.Configuration["JwtSettings:Secret"] ?? "ThisIsAVeryLongSecretKeyForDevelopmentOnly2024!SecureKeyForHms2026";
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"] ?? "hms-api",
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JwtSettings:Audience"] ?? "hms-clients",
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+    builder.Services.AddAuthorization();
 
     // ─── Controllers & Problem Details ───
     builder.Services.AddControllers();
@@ -80,16 +109,20 @@ try
 
             Log.Error(exception, "Unhandled exception on {Path}", context.Request.Path);
 
+            var statusCode = exception is Hms.Domain.Exceptions.DomainException
+                ? StatusCodes.Status400BadRequest
+                : StatusCodes.Status500InternalServerError;
+
             var problemDetails = new ProblemDetails
             {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "An error occurred while processing your request.",
-                Detail = app.Environment.IsDevelopment() ? exception?.Message : "Internal server error.",
+                Status = statusCode,
+                Title = exception is Hms.Domain.Exceptions.DomainException ? "Business rule violation" : "An error occurred while processing your request.",
+                Detail = exception?.Message,
                 Instance = context.Request.Path
             };
             problemDetails.Extensions["traceId"] = context.TraceIdentifier;
 
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.StatusCode = statusCode;
             await context.Response.WriteAsJsonAsync(problemDetails);
         });
     });
@@ -97,6 +130,9 @@ try
     // ─── Middleware Pipeline ───
     app.UseSerilogRequestLogging();
     app.UseCors(CorsPolicy);
+
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     // OpenAPI & Scalar API Documentation
     app.MapOpenApi("/openapi/v1.json");
@@ -123,11 +159,7 @@ try
 
     app.Run();
 }
-catch (HostAbortedException)
-{
-    // Normal exit when EF Core design tools inspect the host
-}
-catch (Exception ex)
+catch (Exception ex) when (ex is not HostAbortedException)
 {
     Log.Fatal(ex, "HMS API host terminated unexpectedly");
 }
