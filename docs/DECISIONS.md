@@ -102,3 +102,21 @@ Default to single hospital deployment. Include `HospitalId` on every core table 
 
 ### Decision
 Use "round away from zero" (standard mathematical rounding) for all billing calculations to 2 decimal places. This is the expected behavior in Bangladesh commercial contexts.
+
+---
+
+## ADR-010: Bangladesh Geo-Administrative Reference Dataset Source
+**Date:** 2026-10-18  
+**Status:** Accepted
+
+### Decision
+Administrative boundary data (Divisions, Districts, Upazilas/Thanas) is sourced from the official Bangladesh National Web Portal (`https://bangladesh.gov.bd/site/view/all_divisions`) and the Bangladesh Bureau of Statistics (BBS) administrative code listings.
+
+### Structure
+- 8 Administrative Divisions (Dhaka, Chattogram, Rajshahi, Khulna, Barishal, Sylhet, Rangpur, Mymensingh)
+- 64 Districts with official English and Bengali names
+- 495 Upazilas/Thanas structured hierarchically
+
+### Implementation
+Seeded into `GeoDivision`, `GeoDistrict`, and `GeoUpazila` tables with relational integrity. Exposed via `/api/v1/geo/*` endpoints for cascaded dropdown selection in registration forms.
+

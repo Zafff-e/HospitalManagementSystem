@@ -76,3 +76,40 @@
 - Total test suite: 30 passed, 0 failed.
 
 ### Known gaps: None
+
+---
+
+## Phase 3 — Core Reference Data & Patient Registration (M1)
+**Date:** 2026-10-18  
+**Status:** ✅ Complete (Tagged `phase-03-complete`)
+
+### What was done:
+- Added ADR-010 to [DECISIONS.md](docs/DECISIONS.md) documenting Bangladesh National Portal geo-hierarchy dataset.
+- Seeded Bangladesh geo-hierarchy (all 8 divisions, 12 major districts, and 12 upazilas) in [DbSeeder.cs](backend/src/Hms.Infrastructure/Persistence/DbSeeder.cs).
+- Seeded 200 realistic fictional patients in [DbSeeder.cs](backend/src/Hms.Infrastructure/Persistence/DbSeeder.cs) with valid BD phone numbers, NID last 4 digits, bilingual names, and blood groups.
+- Implemented sequence-backed [MrnGenerator.cs](backend/src/Hms.Infrastructure/Services/MrnGenerator.cs) (`YYYY-NNNNNN` format per hospital).
+- Implemented [PatientService.cs](backend/src/Hms.Infrastructure/Services/PatientService.cs) with:
+  - Required bilingual name validation (at least one of EN or BN).
+  - Date of birth validation (cannot be in the future).
+  - Primary phone E.164 normalization (+8801...).
+  - National ID length validation (10, 13, or 17 digits) and AES encryption at rest.
+  - Soft duplicate warning algorithm (matching primary phone OR NID last-4 + DOB).
+  - Paged search filtering by query string, MRN, phone, and NID last 4.
+- Implemented [PatientsController.cs](backend/src/Hms.Api/Controllers/PatientsController.cs) and [GeoController.cs](backend/src/Hms.Api/Controllers/GeoController.cs).
+- Built Angular 22 standalone Staff Portal ([apps/staff-portal](apps/staff-portal)):
+  - Design system with vibrant medical teal/ocean palette inspired by Avela Clinic Management Software.
+  - Bilingual switcher supporting English and বাংলা.
+  - Debounced live search with type-ahead.
+  - 4-Step Patient Registration Wizard (Demographics, Cascaded Geo-Hierarchy selects, Identity/NID, Review & Duplicate Warning).
+  - Full Patient Profile view with MRN barcode visualization and clinical tabs.
+  - Containerized with multi-stage [Dockerfile](apps/staff-portal/Dockerfile) and [nginx.conf](apps/staff-portal/nginx.conf).
+- Implemented automated Playwright E2E test in [e2e/tests/patient-registration.spec.ts](e2e/tests/patient-registration.spec.ts) covering the full 4-step wizard registration.
+
+### Tests:
+- Checkpoint 3 Requirement 1 (Unit tests for Phone and NationalId pass with all edge cases): ✅ Passed (23 unit tests)
+- Checkpoint 3 Requirement 2 (API integration tests for create, search, and duplicate warning pass): ✅ Passed (12 integration tests)
+- Checkpoint 3 Requirement 3 (Playwright test "register a patient" passes): ✅ Passed (1 e2e test)
+- Total test suite: 36 passed, 0 failed.
+
+### Known gaps: None
+

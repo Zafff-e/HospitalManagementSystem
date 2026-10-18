@@ -63,6 +63,8 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAuditService, AuditService>();
+        services.AddScoped<IMrnGenerator, MrnGenerator>();
+        services.AddScoped<IPatientService, PatientService>();
 
         // ─── Policy-based Authorization ───
         services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
