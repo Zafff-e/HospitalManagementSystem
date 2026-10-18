@@ -350,7 +350,24 @@ public static class DbSeeder
             IsActive = true
         };
 
-        context.Doctors.AddRange(doctor1, doctor2);
+        var docUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "doctor@demo-hms.local");
+        var doctor3 = new Hms.Domain.Entities.Clinical.Doctor
+        {
+            Id = Guid.Parse("66666666-6666-6666-6666-666666666666"),
+            HospitalId = DemoHospitalId,
+            UserId = docUser?.Id ?? Guid.Parse("77777777-7777-7777-7777-777777777777"),
+            DepartmentId = dept.Id,
+            FullName = docUser?.FullName ?? "Dr. Mahmud Hasan",
+            FullNameBn = "ডাঃ মাহমুদ হাসান",
+            Specialty = "General Medicine",
+            SpecialtyBn = "মেডিসিন বিশেষজ্ঞ",
+            BmdcRegNo = docUser?.BmdcRegNo ?? "DEMO-1001",
+            ConsultationFee = 800m,
+            Qualification = "MBBS, FCPS (Medicine)",
+            IsActive = true
+        };
+
+        context.Doctors.AddRange(doctor1, doctor2, doctor3);
         await context.SaveChangesAsync();
 
         // Seed schedules for all days of week
@@ -380,9 +397,62 @@ public static class DbSeeder
                 MaxPatientsPerSlot = 1,
                 IsActive = true
             });
+
+            schedules.Add(new Hms.Domain.Entities.Clinical.DoctorSchedule
+            {
+                DoctorId = doctor3.Id,
+                DayOfWeek = day,
+                StartTime = new TimeSpan(10, 0, 0),
+                EndTime = new TimeSpan(14, 0, 0),
+                SlotMinutes = 15,
+                MaxPatientsPerSlot = 1,
+                IsActive = true
+            });
         }
 
         context.DoctorSchedules.AddRange(schedules);
+        await context.SaveChangesAsync();
+
+        await SeedMedicinesAsync(context);
+    }
+
+    public static async Task SeedMedicinesAsync(HmsDbContext context)
+    {
+        if (await context.Medicines.AnyAsync()) return;
+
+        var medicines = new List<Hms.Domain.Entities.Pharmacy.Medicine>
+        {
+            new() { GenericName = "Paracetamol", BrandName = "Napa", Strength = "500mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 100 },
+            new() { GenericName = "Paracetamol", BrandName = "Ace", Strength = "500mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 100 },
+            new() { GenericName = "Paracetamol Extra", BrandName = "Napa Extra", Strength = "500mg + 65mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Paracetamol Suspension", BrandName = "Napa Suspension", Strength = "120mg/5ml", Form = Hms.Domain.Enums.MedicineForm.Syrup, Unit = "bottle", ReorderLevel = 40 },
+            new() { GenericName = "Amoxicillin", BrandName = "Moxacil", Strength = "500mg", Form = Hms.Domain.Enums.MedicineForm.Capsule, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Amoxicillin Suspension", BrandName = "Moxacil Dry Syrup", Strength = "125mg/5ml", Form = Hms.Domain.Enums.MedicineForm.Syrup, Unit = "bottle", ReorderLevel = 30 },
+            new() { GenericName = "Cefixime", BrandName = "Ceftron", Strength = "200mg", Form = Hms.Domain.Enums.MedicineForm.Capsule, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Azithromycin", BrandName = "Zimax", Strength = "500mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Ciprofloxacin", BrandName = "Ciprocin", Strength = "500mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Metronidazole", BrandName = "Filmet", Strength = "400mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 60 },
+            new() { GenericName = "Omeprazole", BrandName = "Seclo", Strength = "20mg", Form = Hms.Domain.Enums.MedicineForm.Capsule, Unit = "strip", ReorderLevel = 100 },
+            new() { GenericName = "Esomeprazole", BrandName = "Nexum", Strength = "20mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 100 },
+            new() { GenericName = "Pantoprazole", BrandName = "Pantobex", Strength = "20mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Rabeprazole", BrandName = "Finix", Strength = "20mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 60 },
+            new() { GenericName = "Losartan Potassium", BrandName = "Angilock", Strength = "50mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 60 },
+            new() { GenericName = "Amlodipine", BrandName = "Camlodin", Strength = "5mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 60 },
+            new() { GenericName = "Bisoprolol Hemifumarate", BrandName = "Cardibis", Strength = "2.5mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 40 },
+            new() { GenericName = "Metformin Hydrochloride", BrandName = "Comet", Strength = "500mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Gliclazide", BrandName = "Comprid", Strength = "80mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Salbutamol Inhaler", BrandName = "Sultolin Inhaler", Strength = "100mcg/puff", Form = Hms.Domain.Enums.MedicineForm.Inhaler, Unit = "canister", ReorderLevel = 30 },
+            new() { GenericName = "Montelukast", BrandName = "Monas", Strength = "10mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Cetirizine Hydrochloride", BrandName = "Alatrol", Strength = "10mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Fexofenadine Hydrochloride", BrandName = "Fexo", Strength = "120mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Domperidone", BrandName = "Motigut", Strength = "10mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 80 },
+            new() { GenericName = "Ondansetron", BrandName = "Emistat", Strength = "8mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Ibuprofen", BrandName = "Flamyd", Strength = "400mg", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "strip", ReorderLevel = 50 },
+            new() { GenericName = "Oral Rehydration Salts", BrandName = "Orsaline-N", Strength = "Standard", Form = Hms.Domain.Enums.MedicineForm.Other, Unit = "sachet", ReorderLevel = 200 },
+            new() { GenericName = "Calcium + Vitamin D3", BrandName = "Calbo-D", Strength = "500mg + 200IU", Form = Hms.Domain.Enums.MedicineForm.Tablet, Unit = "bottle", ReorderLevel = 60 }
+        };
+
+        context.Medicines.AddRange(medicines);
         await context.SaveChangesAsync();
     }
 }

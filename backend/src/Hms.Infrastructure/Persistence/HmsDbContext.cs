@@ -46,6 +46,9 @@ public class HmsDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<PrescriptionItem> PrescriptionItems => Set<PrescriptionItem>();
     public DbSet<ClinicalNote> ClinicalNotes => Set<ClinicalNote>();
 
+    // Pharmacy
+    public DbSet<Hms.Domain.Entities.Pharmacy.Medicine> Medicines => Set<Hms.Domain.Entities.Pharmacy.Medicine>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

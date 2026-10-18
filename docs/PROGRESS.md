@@ -146,4 +146,54 @@
 
 ### Known gaps: None
 
+---
+
+## Phase 5 — Doctor Consultation / EMR (M3)
+**Date:** 2026-10-18  
+**Status:** ✅ Complete (Tagged `phase-05-complete`)
+
+### What was done:
+- Implemented EMR Domain & Persistence:
+  - Entities: `Encounter`, `VitalSign`, `Diagnosis`, `Prescription`, `PrescriptionItem`, `ClinicalNote`, `Medicine`.
+  - Configured `Medicine` catalogue in [PharmacyEntities.cs](backend/src/Hms.Domain/Entities/Pharmacy/PharmacyEntities.cs) and seeded 28 essential Bangladesh medicines (Paracetamol, Amoxicillin, Cefixime, Azithromycin, Omeprazole, Losartan, Amlodipine, etc.).
+  - Created [Icd10Dataset.cs](backend/src/Hms.Infrastructure/Clinical/Icd10Dataset.cs) cataloging 35 common Bangladesh conditions with bilingual descriptions (EN & BN).
+- Enforced BMDC Registration & Security:
+  - `emr.prescribe` permission required on prescription issuance (`[HasPermission("emr.prescribe")]`).
+  - Doctor BMDC registration number verified on user profile and doctor entity prior to issuing prescriptions. Non-doctors receive 403 Forbidden.
+  - Every prescription write creates a structured immutable record in `AuditLogs`.
+- Implemented QuestPDF Prescription Generation:
+  - Created official Bangladesh prescription PDF in [EmrService.cs](backend/src/Hms.Infrastructure/Services/EmrService.cs):
+    - Hospital header with DGHS license, VAT registration, address, and emergency hotline.
+    - Doctor details: full name, qualifications, specialty, and BMDC Registration Number.
+    - Patient strip: bilingual name, MRN, age, gender, and recorded weight.
+    - Left column: Vitals summary (BP, Pulse, Temp, SpO2) and ICD-10 diagnosis.
+    - Right column: ℞ symbol, numbered medicine schedule (dose, frequency e.g. 1+0+1, duration, and bilingual instructions).
+    - Footer: Doctor's advice, follow-up date, and doctor's signature line.
+- Implemented API Controllers:
+  - [EncountersController.cs](backend/src/Hms.Api/Controllers/EncountersController.cs): `POST /encounters`, `GET /encounters/{id}`, `POST /encounters/{id}/vitals`, `POST /encounters/{id}/diagnoses`, `POST /encounters/{id}/notes`, `POST /encounters/{id}/prescriptions`.
+  - [PrescriptionsController.cs](backend/src/Hms.Api/Controllers/PrescriptionsController.cs): `GET /prescriptions/{id}/pdf` streaming generated PDF.
+  - [ClinicalController.cs](backend/src/Hms.Api/Controllers/ClinicalController.cs): `GET /clinical/icd10?q=` and `GET /clinical/medicines?q=`.
+- Scaffolded & Built React 19 Clinical Workspace ([apps/clinical-app](apps/clinical-app)):
+  - Built with React 19, TypeScript, Vite, and glassmorphism design system inspired by Avela Clinic Management Software.
+  - Live OPD Queue view with real-time SignalR WebSocket connection to `/hubs/opd`.
+  - 3-Panel Consultation Screen:
+    - Left: Patient demographic summary, MRN, and interactive vitals tracking.
+    - Center: Vital signs recorder, ICD-10 search with auto-suggest dropdown, and clinical progress notes.
+    - Right: Smart prescription composer with medicine catalogue search, frequency presets, bilingual instructions, advice, and one-click PDF download.
+  - Added multi-stage [Dockerfile](apps/clinical-app/Dockerfile) and [nginx.conf](apps/clinical-app/nginx.conf) running on port 5173 / `/clinic/`.
+- Integration Tests in [EmrConsultationTests.cs](backend/tests/Hms.IntegrationTests/EmrConsultationTests.cs):
+  - Non-doctor / receptionist calling prescription endpoint receives 403 Forbidden.
+  - Doctor full consultation flow (start encounter -> record vitals -> diagnose -> prescribe -> download PDF with %PDF header and > 1KB payload).
+  - Search catalogs for ICD-10 conditions and medicines.
+
+### Tests:
+- Checkpoint 5 Requirement 1 (Non-doctor cannot prescribe -> 403 Forbidden): ✅ Passed
+- Checkpoint 5 Requirement 2 (Doctor full consultation flow: vitals, diagnosis, prescribe -> 201 Created with BMDC number): ✅ Passed
+- Checkpoint 5 Requirement 3 (Prescription PDF generation: returns valid application/pdf with header and content): ✅ Passed
+- Checkpoint 5 Requirement 4 (Clinical catalog search for ICD-10 and medicines): ✅ Passed
+- Total test suite: 41 passed, 0 failed (23 Unit Tests + 18 Integration Tests).
+
+### Known gaps: None
+
+
 
