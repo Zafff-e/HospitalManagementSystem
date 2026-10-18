@@ -1,0 +1,12 @@
+{
+  "name": "@hms/design-tokens",
+  "version": "1.0.0",
+  "description": "Shared design system tokens for HMS - Hospital Management System",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node scripts/generate.js"
+  },
+  "keywords": ["design-tokens", "hms", "hospital"],
+  "license": "UNLICENSED"
+}

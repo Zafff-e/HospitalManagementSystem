@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # ─── SQL Server Database ───
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: hms-sqlserver
+    hostname: hms-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_SA_PASSWORD:-YourStrong@Passw0rd123}
+      - MSSQL_PID=Developer
+      - MSSQL_COLLATION=SQL_Latin1_General_CP1_CI_AS
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./infra/sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" -C -b -o /dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - hms-network
+    restart: unless-stopped
+
+  # ─── .NET API Backend ───
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hms-api
+    hostname: hms-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=hms-sqlserver;Database=HmsDb;User=sa;Password=${DB_SA_PASSWORD:-YourStrong@Passw0rd123};TrustServerCertificate=True;MultipleActiveResultSets=true
+      - JwtSettings__Secret=${JWT_SECRET:-ThisIsAVeryLongSecretKeyForDevelopmentOnly2024!}
+      - JwtSettings__Issuer=hms-api
+      - JwtSettings__Audience=hms-clients
+      - JwtSettings__AccessTokenExpirationMinutes=15
+      - JwtSettings__RefreshTokenExpirationDays=7
+    ports:
+      - "5000:5000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - hms-network
+    restart: unless-stopped
+
+  # ─── Angular Staff Portal ───
+  staff-portal:
+    build:
+      context: ./apps/staff-portal
+      dockerfile: Dockerfile
+    container_name: hms-staff-portal
+    hostname: hms-staff-portal
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - hms-network
+    restart: unless-stopped
+
+  # ─── React Clinical App ───
+  clinical-app:
+    build:
+      context: ./apps/clinical-app
+      dockerfile: Dockerfile
+    container_name: hms-clinical-app
+    hostname: hms-clinical-app
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+    networks:
+      - hms-network
+    restart: unless-stopped
+
+  # ─── Nginx Reverse Proxy ───
+  nginx:
+    image: nginx:latest
+    container_name: hms-nginx
+    hostname: hms-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - staff-portal
+      - clinical-app
+    networks:
+      - hms-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+    driver: local
+
+networks:
+  hms-network:
+    driver: bridge

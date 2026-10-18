@@ -1,0 +1,408 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   HMS Design System — Core Design Tokens
+   Hospital Management System — Bangladesh Healthcare
+   
+   Premium design system with vibrant gradients, glassmorphism,
+   dynamic animations, and modern healthcare aesthetics.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Color Palette: Medical Teal + Deep Ocean ─── */
+  
+  /* Primary — Medical Teal */
+  --hms-primary-50:  #ECFEFF;
+  --hms-primary-100: #CFFAFE;
+  --hms-primary-200: #A5F3FC;
+  --hms-primary-300: #67E8F9;
+  --hms-primary-400: #22D3EE;
+  --hms-primary-500: #06B6D4;
+  --hms-primary-600: #0891B2;
+  --hms-primary-700: #0E7490;
+  --hms-primary-800: #155E75;
+  --hms-primary-900: #164E63;
+  --hms-primary-950: #083344;
+
+  /* Secondary — Royal Purple */
+  --hms-secondary-50:  #FAF5FF;
+  --hms-secondary-100: #F3E8FF;
+  --hms-secondary-200: #E9D5FF;
+  --hms-secondary-300: #D8B4FE;
+  --hms-secondary-400: #C084FC;
+  --hms-secondary-500: #A855F7;
+  --hms-secondary-600: #9333EA;
+  --hms-secondary-700: #7C3AED;
+  --hms-secondary-800: #6B21A8;
+  --hms-secondary-900: #581C87;
+  --hms-secondary-950: #3B0764;
+
+  /* Accent — Warm Amber */
+  --hms-accent-50:  #FFFBEB;
+  --hms-accent-100: #FEF3C7;
+  --hms-accent-200: #FDE68A;
+  --hms-accent-300: #FCD34D;
+  --hms-accent-400: #FBBF24;
+  --hms-accent-500: #F59E0B;
+  --hms-accent-600: #D97706;
+  --hms-accent-700: #B45309;
+  --hms-accent-800: #92400E;
+  --hms-accent-900: #78350F;
+
+  /* Success — Emerald Green */
+  --hms-success-50:  #ECFDF5;
+  --hms-success-100: #D1FAE5;
+  --hms-success-200: #A7F3D0;
+  --hms-success-300: #6EE7B7;
+  --hms-success-400: #34D399;
+  --hms-success-500: #10B981;
+  --hms-success-600: #059669;
+  --hms-success-700: #047857;
+  --hms-success-800: #065F46;
+  --hms-success-900: #064E3B;
+
+  /* Warning — Sunset Orange */
+  --hms-warning-50:  #FFF7ED;
+  --hms-warning-100: #FFEDD5;
+  --hms-warning-200: #FED7AA;
+  --hms-warning-300: #FDBA74;
+  --hms-warning-400: #FB923C;
+  --hms-warning-500: #F97316;
+  --hms-warning-600: #EA580C;
+  --hms-warning-700: #C2410C;
+  --hms-warning-800: #9A3412;
+  --hms-warning-900: #7C2D12;
+
+  /* Danger — Crimson Red */
+  --hms-danger-50:  #FEF2F2;
+  --hms-danger-100: #FEE2E2;
+  --hms-danger-200: #FECACA;
+  --hms-danger-300: #FCA5A5;
+  --hms-danger-400: #F87171;
+  --hms-danger-500: #EF4444;
+  --hms-danger-600: #DC2626;
+  --hms-danger-700: #B91C1C;
+  --hms-danger-800: #991B1B;
+  --hms-danger-900: #7F1D1D;
+
+  /* Neutral — Slate */
+  --hms-neutral-50:  #F8FAFC;
+  --hms-neutral-100: #F1F5F9;
+  --hms-neutral-200: #E2E8F0;
+  --hms-neutral-300: #CBD5E1;
+  --hms-neutral-400: #94A3B8;
+  --hms-neutral-500: #64748B;
+  --hms-neutral-600: #475569;
+  --hms-neutral-700: #334155;
+  --hms-neutral-800: #1E293B;
+  --hms-neutral-900: #0F172A;
+  --hms-neutral-950: #020617;
+
+  /* ─── Semantic Colors ─── */
+  --hms-bg-primary:    var(--hms-neutral-50);
+  --hms-bg-secondary:  #FFFFFF;
+  --hms-bg-tertiary:   var(--hms-neutral-100);
+  --hms-bg-sidebar:    linear-gradient(180deg, #0F172A 0%, #1E293B 50%, #164E63 100%);
+  --hms-bg-header:     rgba(255, 255, 255, 0.85);
+  --hms-bg-card:       #FFFFFF;
+  --hms-bg-card-hover: var(--hms-neutral-50);
+  --hms-bg-overlay:    rgba(15, 23, 42, 0.6);
+
+  --hms-text-primary:   var(--hms-neutral-900);
+  --hms-text-secondary: var(--hms-neutral-600);
+  --hms-text-tertiary:  var(--hms-neutral-400);
+  --hms-text-inverse:   #FFFFFF;
+  --hms-text-link:      var(--hms-primary-600);
+
+  --hms-border-light:   var(--hms-neutral-200);
+  --hms-border-default: var(--hms-neutral-300);
+  --hms-border-focus:   var(--hms-primary-500);
+
+  /* ─── Gradients ─── */
+  --hms-gradient-primary:    linear-gradient(135deg, #06B6D4 0%, #0891B2 50%, #0E7490 100%);
+  --hms-gradient-secondary:  linear-gradient(135deg, #A855F7 0%, #7C3AED 50%, #6B21A8 100%);
+  --hms-gradient-accent:     linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  --hms-gradient-success:    linear-gradient(135deg, #10B981 0%, #059669 100%);
+  --hms-gradient-danger:     linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  --hms-gradient-hero:       linear-gradient(135deg, #0F172A 0%, #164E63 30%, #0891B2 70%, #22D3EE 100%);
+  --hms-gradient-sidebar:    linear-gradient(180deg, #0F172A 0%, #1E293B 40%, #164E63 100%);
+  --hms-gradient-card:       linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+  --hms-gradient-glass:      linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  --hms-gradient-mesh:       radial-gradient(at 40% 20%, hsla(181, 90%, 50%, 0.15) 0px, transparent 50%),
+                             radial-gradient(at 80% 0%, hsla(270, 90%, 65%, 0.1) 0px, transparent 50%),
+                             radial-gradient(at 0% 50%, hsla(181, 90%, 50%, 0.08) 0px, transparent 50%);
+
+  /* ─── Typography ─── */
+  --hms-font-sans:       'Inter', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --hms-font-mono:       'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --hms-font-bangla:     'Noto Sans Bengali', 'Kalpurush', 'SolaimanLipi', sans-serif;
+
+  --hms-text-xs:   0.75rem;    /* 12px */
+  --hms-text-sm:   0.875rem;   /* 14px */
+  --hms-text-base: 1rem;       /* 16px */
+  --hms-text-lg:   1.125rem;   /* 18px */
+  --hms-text-xl:   1.25rem;    /* 20px */
+  --hms-text-2xl:  1.5rem;     /* 24px */
+  --hms-text-3xl:  1.875rem;   /* 30px */
+  --hms-text-4xl:  2.25rem;    /* 36px */
+  --hms-text-5xl:  3rem;       /* 48px */
+
+  --hms-font-light:    300;
+  --hms-font-normal:   400;
+  --hms-font-medium:   500;
+  --hms-font-semibold: 600;
+  --hms-font-bold:     700;
+
+  --hms-leading-tight:  1.25;
+  --hms-leading-normal: 1.5;
+  --hms-leading-relaxed: 1.75;
+
+  /* ─── Spacing (4px scale) ─── */
+  --hms-space-0:   0;
+  --hms-space-1:   0.25rem;   /* 4px */
+  --hms-space-2:   0.5rem;    /* 8px */
+  --hms-space-3:   0.75rem;   /* 12px */
+  --hms-space-4:   1rem;      /* 16px */
+  --hms-space-5:   1.25rem;   /* 20px */
+  --hms-space-6:   1.5rem;    /* 24px */
+  --hms-space-8:   2rem;      /* 32px */
+  --hms-space-10:  2.5rem;    /* 40px */
+  --hms-space-12:  3rem;      /* 48px */
+  --hms-space-16:  4rem;      /* 64px */
+  --hms-space-20:  5rem;      /* 80px */
+  --hms-space-24:  6rem;      /* 96px */
+
+  /* ─── Border Radius ─── */
+  --hms-radius-sm:   0.25rem;  /* 4px */
+  --hms-radius-md:   0.5rem;   /* 8px */
+  --hms-radius-lg:   0.75rem;  /* 12px */
+  --hms-radius-xl:   1rem;     /* 16px */
+  --hms-radius-2xl:  1.5rem;   /* 24px */
+  --hms-radius-full: 9999px;
+
+  /* ─── Shadows ─── */
+  --hms-shadow-xs:    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --hms-shadow-sm:    0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --hms-shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --hms-shadow-lg:    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --hms-shadow-xl:    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --hms-shadow-2xl:   0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --hms-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --hms-shadow-glow:  0 0 20px rgba(6, 182, 212, 0.3);
+  --hms-shadow-glow-purple: 0 0 20px rgba(168, 85, 247, 0.3);
+
+  /* ─── Glass Effect ─── */
+  --hms-glass-bg:       rgba(255, 255, 255, 0.7);
+  --hms-glass-border:   rgba(255, 255, 255, 0.2);
+  --hms-glass-blur:     blur(16px);
+  --hms-glass-bg-dark:  rgba(15, 23, 42, 0.7);
+
+  /* ─── Transitions ─── */
+  --hms-transition-fast:    150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --hms-transition-normal:  250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --hms-transition-slow:    350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --hms-transition-spring:  500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ─── Z-Index Scale ─── */
+  --hms-z-dropdown:  1000;
+  --hms-z-sticky:    1020;
+  --hms-z-fixed:     1030;
+  --hms-z-modal-bg:  1040;
+  --hms-z-modal:     1050;
+  --hms-z-popover:   1060;
+  --hms-z-tooltip:   1070;
+  --hms-z-toast:     1080;
+
+  /* ─── Layout ─── */
+  --hms-sidebar-width:           280px;
+  --hms-sidebar-collapsed-width: 72px;
+  --hms-header-height:           64px;
+  --hms-content-max-width:       1440px;
+
+  /* ─── Status Colors (Bed Board) ─── */
+  --hms-bed-free:        #10B981;
+  --hms-bed-occupied:    #EF4444;
+  --hms-bed-cleaning:    #F59E0B;
+  --hms-bed-maintenance: #6366F1;
+  --hms-bed-reserved:    #8B5CF6;
+
+  /* ─── Triage Levels (ER) ─── */
+  --hms-triage-1: #DC2626;  /* Resuscitation — Red */
+  --hms-triage-2: #F97316;  /* Emergency — Orange */
+  --hms-triage-3: #EAB308;  /* Urgent — Yellow */
+  --hms-triage-4: #22C55E;  /* Standard — Green */
+  --hms-triage-5: #3B82F6;  /* Non-urgent — Blue */
+
+  /* ─── Appointment Status ─── */
+  --hms-appt-booked:    #3B82F6;
+  --hms-appt-checkedin: #8B5CF6;
+  --hms-appt-inconsult: #06B6D4;
+  --hms-appt-completed: #10B981;
+  --hms-appt-cancelled: #EF4444;
+  --hms-appt-noshow:    #6B7280;
+}
+
+/* ─── Dark Mode ─── */
+[data-theme="dark"],
+.dark {
+  --hms-bg-primary:    #0B1120;
+  --hms-bg-secondary:  #111827;
+  --hms-bg-tertiary:   #1E293B;
+  --hms-bg-header:     rgba(17, 24, 39, 0.85);
+  --hms-bg-card:       #1E293B;
+  --hms-bg-card-hover: #263347;
+  --hms-bg-overlay:    rgba(0, 0, 0, 0.7);
+
+  --hms-text-primary:   #F1F5F9;
+  --hms-text-secondary: #94A3B8;
+  --hms-text-tertiary:  #64748B;
+  --hms-text-link:      var(--hms-primary-400);
+
+  --hms-border-light:   #1E293B;
+  --hms-border-default: #334155;
+  --hms-border-focus:   var(--hms-primary-400);
+
+  --hms-shadow-sm:    0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --hms-shadow-md:    0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --hms-shadow-lg:    0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --hms-shadow-xl:    0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  --hms-shadow-glow:  0 0 30px rgba(6, 182, 212, 0.2);
+
+  --hms-glass-bg:     rgba(30, 41, 59, 0.7);
+  --hms-glass-border: rgba(255, 255, 255, 0.1);
+
+  --hms-gradient-card: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+}
+
+/* ─── Animations ─── */
+@keyframes hms-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hms-slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes hms-slide-in-left {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes hms-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hms-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hms-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4); }
+  50%      { box-shadow: 0 0 20px 5px rgba(6, 182, 212, 0.2); }
+}
+
+@keyframes hms-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes hms-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes hms-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes hms-heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%      { transform: scale(1.1); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.1); }
+  70%      { transform: scale(1); }
+}
+
+/* ─── Animation Utilities ─── */
+.hms-animate-fade-in      { animation: hms-fade-in 0.4s ease-out; }
+.hms-animate-slide-right   { animation: hms-slide-in-right 0.3s ease-out; }
+.hms-animate-slide-left    { animation: hms-slide-in-left 0.3s ease-out; }
+.hms-animate-slide-up      { animation: hms-slide-up 0.4s ease-out; }
+.hms-animate-scale-in      { animation: hms-scale-in 0.3s ease-out; }
+.hms-animate-pulse-glow    { animation: hms-pulse-glow 2s infinite; }
+.hms-animate-shimmer       { animation: hms-shimmer 2s infinite linear; background-size: 200% 100%; }
+.hms-animate-float         { animation: hms-float 3s ease-in-out infinite; }
+.hms-animate-spin          { animation: hms-spin 1s linear infinite; }
+.hms-animate-heartbeat     { animation: hms-heartbeat 1.5s ease-in-out infinite; }
+
+/* ─── Staggered Animations ─── */
+.hms-stagger-1  { animation-delay: 0.05s; }
+.hms-stagger-2  { animation-delay: 0.1s; }
+.hms-stagger-3  { animation-delay: 0.15s; }
+.hms-stagger-4  { animation-delay: 0.2s; }
+.hms-stagger-5  { animation-delay: 0.25s; }
+.hms-stagger-6  { animation-delay: 0.3s; }
+.hms-stagger-7  { animation-delay: 0.35s; }
+.hms-stagger-8  { animation-delay: 0.4s; }
+
+/* ─── Glass Components ─── */
+.hms-glass {
+  background: var(--hms-glass-bg);
+  backdrop-filter: var(--hms-glass-blur);
+  -webkit-backdrop-filter: var(--hms-glass-blur);
+  border: 1px solid var(--hms-glass-border);
+}
+
+.hms-glass-card {
+  background: var(--hms-glass-bg);
+  backdrop-filter: var(--hms-glass-blur);
+  -webkit-backdrop-filter: var(--hms-glass-blur);
+  border: 1px solid var(--hms-glass-border);
+  border-radius: var(--hms-radius-xl);
+  box-shadow: var(--hms-shadow-lg);
+}
+
+/* ─── Skeleton Loading ─── */
+.hms-skeleton {
+  background: linear-gradient(90deg, var(--hms-neutral-200) 25%, var(--hms-neutral-100) 50%, var(--hms-neutral-200) 75%);
+  background-size: 200% 100%;
+  animation: hms-shimmer 1.5s infinite;
+  border-radius: var(--hms-radius-md);
+}
+
+[data-theme="dark"] .hms-skeleton,
+.dark .hms-skeleton {
+  background: linear-gradient(90deg, var(--hms-neutral-800) 25%, var(--hms-neutral-700) 50%, var(--hms-neutral-800) 75%);
+  background-size: 200% 100%;
+}
+
+/* ─── Focus Rings ─── */
+.hms-focus-ring:focus-visible {
+  outline: 2px solid var(--hms-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--hms-radius-md);
+}
+
+/* ─── Scrollbar Styling ─── */
+.hms-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.hms-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hms-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--hms-neutral-300);
+  border-radius: var(--hms-radius-full);
+}
+.hms-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--hms-neutral-400);
+}
+
+[data-theme="dark"] .hms-scrollbar::-webkit-scrollbar-thumb,
+.dark .hms-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--hms-neutral-600);
+}

@@ -1,0 +1,87 @@
+# =========================
+# .NET / C#
+# =========================
+*.suo
+*.user
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+[Bb]in/
+[Oo]bj/
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# =========================
+# Frontend builds
+# =========================
+dist/
+.angular/
+.vite/
+*.tsbuildinfo
+
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.env.*
+!.env.example
+*.pfx
+*.key
+*.pem
+appsettings.Development.json
+appsettings.Production.json
+usersecrets/
+
+# =========================
+# IDE
+# =========================
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Testing
+# =========================
+coverage/
+test-results/
+playwright-report/
+blob-report/
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
