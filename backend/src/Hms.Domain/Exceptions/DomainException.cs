@@ -1,4 +1,4 @@
-namespace Hms.Domain.ValueObjects;
+namespace Hms.Domain.Exceptions;
 
 /// <summary>
 /// Custom domain exception for business rule violations.

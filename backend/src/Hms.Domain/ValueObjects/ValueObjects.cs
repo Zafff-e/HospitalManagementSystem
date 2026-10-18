@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Hms.Domain.Exceptions;
 
 namespace Hms.Domain.ValueObjects;
 
@@ -23,9 +24,9 @@ public sealed partial class Phone : IEquatable<Phone>
 
         var cleaned = input.Trim().Replace(" ", "").Replace("-", "");
 
-        // Bangladesh: accept 01X... and normalize to +880...
+        // Bangladesh: accept 01X... and normalize to +8801...
         if (cleaned.StartsWith("01") && cleaned.Length == 11)
-            cleaned = "+880" + cleaned;
+            cleaned = "+88" + cleaned;
         else if (cleaned.StartsWith("8801") && cleaned.Length == 13)
             cleaned = "+" + cleaned;
         else if (!cleaned.StartsWith("+8801"))
